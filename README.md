@@ -13,3 +13,5 @@ class MyJSV(JSV):
 j = MyJSV()
 j.jsv_main()
 ```
+
+This does no inherent type introspection, all ```jsv_(sub_)?get_``` operations will return strings and/or dictionaries. cast them if necessary.
