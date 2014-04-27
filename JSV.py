@@ -100,13 +100,11 @@ class JSV( object ):
             else:
                 self.param[param][value] = None
     def jsv_handle_env_command(self, action, name, data) :
-        pass
-        #if action == "ADD":
-        #    self._job._Update("ENV", name, data)
-        #elif action == "MOD":
-        #    self._job._Update("ENV", name, data)
-        #elif action == "DEL":
-        #    self._job._Update("ENV", name, None)
+        if action == 'DEL':
+            if name in self.env.keys():
+                del(self.env[name])
+        else:
+            self.env[name] = data
     def jsv_on_verify(self):
         self.jsv_accept()
         pass
@@ -148,15 +146,15 @@ class JSV( object ):
         return None
     def jsv_add_env(self, var, val):
         if not self.jsv_is_env(var):
-            self.env['var'] = val
+            self.env[var] = val
             self.jsv_send_command('ENV ADD {} {}'.format(var, val))
     def jsv_mod_env(self, var, val):
         if self.jsv_is_env(var):
-            self.env['var'] = val
+            self.env[var] = val
             self.jsv_send_command('ENV MOD {} {}'.format(var, val))
     def jsv_del_env(self, var):
         if self.jsv_is_env(var):
-            del(self.env['var'])
+            del(self.env[var])
             self.jsv_send_command('ENV DEL {}'.format(var))
     def jsv_show_params(self):
         for k, v in self.param:
