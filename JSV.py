@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import re, sys, tempfile
+import re, sys, tempfile, datetime
 
 class JSV( object ):
     "Control the Job Submission Verification steps"
@@ -26,9 +26,12 @@ class JSV( object ):
         self.param = {}
     def jsv_script_log(self, error) :
         if self.Log:
+            error = "{}\n".format(error)
+            if sys.version_info.major > 2:
+                error = bytes(error, encoding='utf-8')
             self.tempfile.write(error)
     def jsv_main( self ) :
-        self.jsv_script_log(" started on  date")
+        self.jsv_script_log("{} started on date {}".format(sys.argv[0], datetime.datetime.now()))
         self.jsv_script_log("")
         self.jsv_script_log("This file contains logging output from a GE JSV script. Lines beginning")
         self.jsv_script_log("with >>> contain the data which was sent by a command line client or")
@@ -61,7 +64,7 @@ class JSV( object ):
                     self.jsv_send_command("ERROR JSV script got unknown command " + jsv_line[0])
         except (EOFError) :
             pass
-        self.jsv_script_log("$0 is terminating on `date`")
+        self.jsv_script_log("{} is terminating on {}".format(sys.argv[0], datetime.datetime.now()))
         if self.Log:
             self.tempfile.close()
     def jsv_send_command(self, command):
